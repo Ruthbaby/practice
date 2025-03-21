@@ -3,10 +3,11 @@
   <div class="container">
     <Balance :total="+total" />
     <IncomeExpenses :income="+income" :expenses="+expenses" />
-    <TransactionList :transactions="transactions" />
+    <TransactionList :transactions="transactions" @transactionDeleted="handleTransactionDeleted" />
     <AddTransaction 
     @transactionSubmitted="handleTransactionSubmitted" />
   </div>
+  <Footer />
 </template>
 
 <script setup>
@@ -18,18 +19,21 @@ import AddTransaction from './components/AddTransaction.vue';
 
 import { useToast } from 'vue-toastification';
 
-import { ref, computed } from 'vue';
+import Footer from '@/components/Footer.vue';
+
+import { ref, computed, onMounted } from 'vue';
 
 const toast = useToast();
 
-const transactions = ref([
-  {id: 1, text: 'Flower', amount: -12.99},
-  {id: 2, text: 'Salary', amount: 459.99},
-  {id: 3, text: 'Books', amount: -52.39},
-  {id: 4, text: 'SmartPhone', amount: 210},
-  {id: 5, text: 'Services', amount: 130},
-  ]);
-  // console.log(transactions.value);
+const transactions = ref([]);
+
+onMounted(() => {
+  const savedTransactions = JSON.parse(localStorage.getItem('transactions'));
+
+  if(savedTransactions) {
+    transactions.value = savedTransactions
+  }
+})
 // To Get total
   const total = computed(() => {
     return transactions.value.reduce((acc, transaction) => {
@@ -60,6 +64,9 @@ const transactions = ref([
       text: transactionData.text,
       amount: transactionData.amount
     });
+
+    saveTransactionsToLocalStorage();
+
     toast.success('Transaction added');
     // console.log(generateUniqueId());
   };
@@ -67,5 +74,20 @@ const transactions = ref([
   // Unique ID
   const generateUniqueId = () => {
     return Math.floor(Math.random() * 1000000);
+  };
+
+  // Delete Transaction Handler
+  const handleTransactionDeleted = (id) => {
+    transactions.value = transactions.value.filter((transaction) => transaction.id !== id
+  );
+
+  saveTransactionsToLocalStorage();
+
+    toast.success('transaction deleted')
+  };
+
+  // Save to localstorage
+  const saveTransactionsToLocalStorage = () => {
+    localStorage.setItem('transactions', JSON.stringify(transactions.value))
   }
 </script>

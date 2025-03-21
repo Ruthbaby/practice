@@ -25,9 +25,13 @@ body {
 
 h1 {
   letter-spacing: 1px;
-  margin: 0;
+  margin-left: 0;
 }
 
+h2 {
+  letter-spacing: 2px;
+  margin-left: 42px;
+}
 h3 {
   border-bottom: 1px solid #bbb;
   padding-bottom: 10px;
@@ -68,7 +72,7 @@ h4 {
 }
 
 .money.minus {
-  color: #c0392b;
+  color: #c0392b;    
 }
  
 label {
@@ -87,7 +91,7 @@ input[type='text'], input[type='number'] {
 
 .btn {
   cursor: pointer;
-  background-color: #43fa56de;
+  background-color: #69996dde;
   box-shadow: var(--box-shadow);
   color: #fff;
   border: 2px;
